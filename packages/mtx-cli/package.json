@@ -1,5 +1,5 @@
 {
-  "name": "mtx",
+  "name": "@mterminal/mtx",
   "version": "0.1.0",
   "description": "command-line interface for publishing mterminal extensions to the marketplace",
   "license": "MIT",

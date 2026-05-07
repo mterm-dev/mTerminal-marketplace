@@ -61,7 +61,7 @@ The smoke script defaults to `MTX_ENDPOINT=http://127.0.0.1:8787`. Override it t
 ## publishing flow (author)
 
 ```bash
-pnpm --filter mtx run build
+pnpm --filter @mterminal/mtx run build
 node packages/mtx-cli/bin/mtx.mjs login
 node packages/mtx-cli/bin/mtx.mjs keygen
 node packages/mtx-cli/bin/mtx.mjs init my-extension

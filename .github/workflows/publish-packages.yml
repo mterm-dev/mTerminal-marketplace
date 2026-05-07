@@ -26,6 +26,6 @@ jobs:
       - run: pnpm --filter @mterminal/manifest-validator publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: pnpm --filter mtx publish --no-git-checks --access public
+      - run: pnpm --filter @mterminal/mtx publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
