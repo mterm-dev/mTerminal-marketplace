@@ -16,6 +16,8 @@ export async function clearDb(): Promise<void> {
     env.DB.prepare('DELETE FROM extensions'),
     env.DB.prepare('DELETE FROM public_keys'),
     env.DB.prepare('DELETE FROM authors'),
+    env.DB.prepare('DELETE FROM admin_audit'),
+    env.DB.prepare('DELETE FROM pending_r2_cleanup'),
   ])
 }
 
