@@ -51,9 +51,9 @@ jobs:
         id: smoke
         run: |
           if [ "$DEPLOY_ENV" = "production" ]; then
-            url="https://marketplace.mterminal.app/healthz"
+            url="https://marketplace.mterminal.dev/healthz"
           else
-            url="https://staging.marketplace.mterminal.app/healthz"
+            url="https://staging.marketplace.mterminal.dev/healthz"
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
           curl -fsS --retry 5 --retry-delay 3 "$url"

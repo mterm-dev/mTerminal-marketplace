@@ -12,7 +12,7 @@ This document is the canonical reference for the **first-time** production bring
 
 #### Cloudflare
 
-1. Create (or reuse) a Cloudflare account that owns the `mterminal.app` zone.
+1. Create (or reuse) a Cloudflare account that owns the `mterminal.dev` zone.
 2. Install the Wrangler CLI globally or use the workspace copy:
    ```bash
    pnpm dlx wrangler --version
@@ -33,8 +33,8 @@ The worker performs OAuth in **two flows** that need separate apps:
 
 - GitHub → **Settings → Developer settings → OAuth Apps → New OAuth App**
 - Application name: `mTerminal Marketplace CLI (prod)`
-- Homepage URL: `https://marketplace.mterminal.app`
-- Authorization callback URL: `https://marketplace.mterminal.app/v1/auth/github/callback`
+- Homepage URL: `https://marketplace.mterminal.dev`
+- Authorization callback URL: `https://marketplace.mterminal.dev/v1/auth/github/callback`
 - Enable **Device Flow** (checkbox at the bottom of the app page).
 - Save the **Client ID** → `GITHUB_CLIENT_ID` (vars).
 - Generate a new client secret → `GITHUB_CLIENT_SECRET` (wrangler secret).
@@ -43,8 +43,8 @@ The worker performs OAuth in **two flows** that need separate apps:
 
 - New OAuth App (separate from A).
 - Application name: `mTerminal Marketplace Admin (prod)`
-- Homepage URL: `https://marketplace.mterminal.app/admin`
-- Authorization callback URL: `https://marketplace.mterminal.app/v1/admin/auth/github/callback`
+- Homepage URL: `https://marketplace.mterminal.dev/admin`
+- Authorization callback URL: `https://marketplace.mterminal.dev/v1/admin/auth/github/callback`
 - **Do not** enable device flow.
 - Save **Client ID** → `ADMIN_GITHUB_CLIENT_ID` (vars).
 - Generate client secret → `ADMIN_GITHUB_CLIENT_SECRET` (wrangler secret).
@@ -53,9 +53,9 @@ Repeat the whole thing for **staging** with separate apps (`-staging` callback U
 
 #### Domain
 
-1. Add `mterminal.app` to Cloudflare DNS (already required for Workers Routes).
-2. The worker's `[env.production] [[routes]]` entry binds `marketplace.mterminal.app/*` — Cloudflare auto-provisions DNS once the route is published. No manual A/CNAME record needed for the worker subdomain.
-3. For staging, the same applies for `staging.marketplace.mterminal.app/*`.
+1. Add `mterminal.dev` to Cloudflare DNS (already required for Workers Routes).
+2. The worker's `[env.production] [[routes]]` entry binds `marketplace.mterminal.dev/*` — Cloudflare auto-provisions DNS once the route is published. No manual A/CNAME record needed for the worker subdomain.
+3. For staging, the same applies for `staging.marketplace.mterminal.dev/*`.
 
 ### 1.2 Creating Cloudflare resources
 
@@ -135,7 +135,7 @@ Rotation procedure for each is documented in [Secret rotation](#7-secret-rotatio
 - `[[env.<env>.d1_databases]]` with the `database_id` you saved from step 1.2.
 - `[[env.<env>.r2_buckets]]` with `bucket_name`.
 - `[[env.<env>.kv_namespaces]]` with `id`.
-- `[[env.<env>.routes]]` for `marketplace.mterminal.app/*` (or `staging.marketplace.mterminal.app/*`).
+- `[[env.<env>.routes]]` for `marketplace.mterminal.dev/*` (or `staging.marketplace.mterminal.dev/*`).
 - `[env.<env>.assets]` pointing at `../admin/dist` so the admin SPA is bundled into the deploy.
 
 **Important:** `ADMIN_DEV_LOGIN` MUST be `"0"` in production. With `"1"`, `/v1/auth/device/dev-authorize` and equivalent admin shortcuts are enabled — that's only for local dev / smoke tests.
@@ -170,14 +170,14 @@ pnpm --filter @mterminal/worker exec wrangler deploy --env production
 ### 2.4 Smoke test
 
 ```bash
-curl -fsS https://marketplace.mterminal.app/healthz
+curl -fsS https://marketplace.mterminal.dev/healthz
 # expected: {"ok":true,...}
 ```
 
 For a richer end-to-end check (device flow + pack + publish), run `scripts/smoke.sh` against the staging endpoint:
 
 ```bash
-MTX_ENDPOINT=https://staging.marketplace.mterminal.app pnpm smoke
+MTX_ENDPOINT=https://staging.marketplace.mterminal.dev pnpm smoke
 ```
 
 (Don't run `smoke.sh` against prod — it depends on `ADMIN_DEV_LOGIN=1` for `dev-authorize`.)
@@ -189,8 +189,8 @@ MTX_ENDPOINT=https://staging.marketplace.mterminal.app pnpm smoke
 The route binding in `wrangler.toml` is sufficient. To verify:
 
 1. Cloudflare dashboard → **Workers & Pages → mterminal-marketplace-prod → Triggers**.
-2. **Custom Domains** should list `marketplace.mterminal.app`. If not, click **Add Custom Domain** and confirm — Cloudflare provisions the cert automatically.
-3. DNS for `mterminal.app` must be managed by Cloudflare (orange-cloud proxied).
+2. **Custom Domains** should list `marketplace.mterminal.dev`. If not, click **Add Custom Domain** and confirm — Cloudflare provisions the cert automatically.
+3. DNS for `mterminal.dev` must be managed by Cloudflare (orange-cloud proxied).
 
 ---
 

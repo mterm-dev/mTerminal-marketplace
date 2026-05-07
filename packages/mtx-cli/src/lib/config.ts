@@ -19,7 +19,7 @@ export function configPath(): string {
 }
 
 export function defaultEndpoint(): string {
-  return process.env.MTX_ENDPOINT ?? 'https://marketplace.mterminal.app'
+  return process.env.MTX_ENDPOINT ?? 'https://marketplace.mterminal.dev'
 }
 
 export async function loadConfig(): Promise<MtxConfig> {

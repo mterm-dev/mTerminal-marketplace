@@ -50,11 +50,11 @@ Use this when you bump the version of any of the public npm packages.
    - builds all packages (`pnpm -r build`),
    - builds the admin SPA (`pnpm --filter @mterminal/admin build`),
    - runs `wrangler deploy --env production`,
-   - smoke-tests `https://marketplace.mterminal.app/healthz`,
+   - smoke-tests `https://marketplace.mterminal.dev/healthz`,
    - pings `DEPLOY_WEBHOOK_URL` if configured.
 4. Verify:
    ```bash
-   curl -fsS https://marketplace.mterminal.app/healthz
+   curl -fsS https://marketplace.mterminal.dev/healthz
    ```
 
 For the rollback path, see [`DEPLOY.md` §4](./DEPLOY.md#4-rollback).

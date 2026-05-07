@@ -40,12 +40,12 @@ GITHUB_CLIENT_ID = "REPLACE_WITH_STAGING_GITHUB_CLIENT_ID"
 ADMIN_GITHUB_CLIENT_ID = "REPLACE_WITH_STAGING_ADMIN_GITHUB_CLIENT_ID"
 ADMIN_LOGINS = "arthurr0"
 ADMIN_DEV_LOGIN = "0"
-PUBLIC_R2_BASE = "https://staging.marketplace.mterminal.app/r2"
+PUBLIC_R2_BASE = "https://staging.marketplace.mterminal.dev/r2"
 SIGNED_URL_TTL_SEC = "300"
 
 [[env.staging.routes]]
-pattern = "staging.marketplace.mterminal.app/*"
-zone_name = "mterminal.app"
+pattern = "staging.marketplace.mterminal.dev/*"
+zone_name = "mterminal.dev"
 
 [[env.staging.d1_databases]]
 binding = "DB"
@@ -76,12 +76,12 @@ GITHUB_CLIENT_ID = "REPLACE_WITH_PROD_GITHUB_CLIENT_ID"
 ADMIN_GITHUB_CLIENT_ID = "REPLACE_WITH_PROD_ADMIN_GITHUB_CLIENT_ID"
 ADMIN_LOGINS = "arthurr0"
 ADMIN_DEV_LOGIN = "0"
-PUBLIC_R2_BASE = "https://marketplace.mterminal.app/r2"
+PUBLIC_R2_BASE = "https://marketplace.mterminal.dev/r2"
 SIGNED_URL_TTL_SEC = "300"
 
 [[env.production.routes]]
-pattern = "marketplace.mterminal.app/*"
-zone_name = "mterminal.app"
+pattern = "marketplace.mterminal.dev/*"
+zone_name = "mterminal.dev"
 
 [[env.production.d1_databases]]
 binding = "DB"
