@@ -1,0 +1,29 @@
+{
+  "name": "mterminal-plugin-EXT_ID",
+  "version": "0.1.0",
+  "description": "an mTerminal extension",
+  "main": "dist/main.cjs",
+  "renderer": "dist/renderer.mjs",
+  "scripts": {
+    "build": "tsup"
+  },
+  "engines": {
+    "mterminal-api": "^1.0.0"
+  },
+  "mterminal": {
+    "id": "EXT_ID",
+    "displayName": "EXT_ID",
+    "category": "other",
+    "publisher": {
+      "authorId": "",
+      "keyId": ""
+    },
+    "activationEvents": ["onStartupFinished"],
+    "capabilities": [],
+    "contributes": {}
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
+  }
+}

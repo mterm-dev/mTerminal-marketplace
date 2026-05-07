@@ -1,0 +1,35 @@
+{
+  "name": "mtx",
+  "version": "0.1.0",
+  "description": "command-line interface for publishing mterminal extensions to the marketplace",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mtx": "./bin/mtx.mjs"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["bin", "dist", "templates", "src"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@mterminal/manifest-validator": "workspace:*",
+    "@mterminal/marketplace-types": "workspace:*",
+    "@noble/ed25519": "^2.1.0",
+    "@noble/hashes": "^1.5.0",
+    "cac": "^6.7.14",
+    "fflate": "^0.8.2",
+    "picocolors": "^1.1.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
+  }
+}

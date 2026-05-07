@@ -1,0 +1,23 @@
+name = "mterminal-marketplace"
+main = "src/index.ts"
+compatibility_date = "2024-11-12"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+GITHUB_CLIENT_ID = "replace-me"
+PUBLIC_R2_BASE = "http://localhost:8787/r2"
+SIGNED_URL_TTL_SEC = "300"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mterminal"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "src/db/migrations"
+
+[[r2_buckets]]
+binding = "PACKAGES"
+bucket_name = "mterminal-packages"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "00000000000000000000000000000000"
