@@ -39,7 +39,7 @@ pnpm wrangler d1 migrations apply mterminal --local
 pnpm dev
 ```
 
-The worker listens on `http://localhost:8787`. D1 binding is `DB`, R2 binding is `PACKAGES`, KV binding is `SESSIONS`.
+The worker listens on `http://127.0.0.1:8787`. D1 binding is `DB`, R2 binding is `PACKAGES`, KV binding is `SESSIONS`.
 
 ## smoke test
 
@@ -49,6 +49,14 @@ End-to-end cycle init → keygen → pack → publish against a running local wo
 pnpm dev:worker &
 pnpm smoke
 ```
+
+The smoke script defaults to `MTX_ENDPOINT=http://127.0.0.1:8787`. Override it to point at a deployed environment.
+
+## test layout
+
+- `apps/worker/test/` — vitest under `@cloudflare/vitest-pool-workers`. D1 schema is loaded from `src/db/migrations/` via `readD1Migrations` (single source of truth).
+- `packages/manifest-validator/src/index.test.ts` — pure unit tests.
+- `packages/mtx-cli/src/lib/*.test.ts` — pure unit tests with stubbed fetch and tmp filesystems.
 
 ## publishing flow (author)
 

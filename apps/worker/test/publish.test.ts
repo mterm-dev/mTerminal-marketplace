@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { SELF } from 'cloudflare:test'
-import { applySchema, clearDb, buildPackage, seedAuthor } from './helpers'
-import { strToU8 } from 'fflate'
-
-async function setup() {
-  await applySchema()
-  await clearDb()
-}
+import { buildPackage, seedAuthor } from './helpers'
 
 async function postPackage(buf: Uint8Array, apiKey: string): Promise<Response> {
   const fd = new FormData()
@@ -20,13 +14,11 @@ async function postPackage(buf: Uint8Array, apiKey: string): Promise<Response> {
 
 describe('publish pipeline', () => {
   it('rejects unauthenticated', async () => {
-    await setup()
     const res = await SELF.fetch('http://test.local/v1/publish', { method: 'POST' })
     expect(res.status).toBe(401)
   })
 
   it('happy path publishes', async () => {
-    await setup()
     const a = await seedAuthor('alice')
     const buf = await buildPackage({
       id: 'demo',
@@ -50,7 +42,6 @@ describe('publish pipeline', () => {
   })
 
   it('rejects flipped signature', async () => {
-    await setup()
     const a = await seedAuthor('bob')
     const buf = await buildPackage({
       id: 'demo',
@@ -67,7 +58,6 @@ describe('publish pipeline', () => {
   })
 
   it('rejects invalid manifest', async () => {
-    await setup()
     const a = await seedAuthor('carol')
     const buf = await buildPackage({
       id: 'BadId',
@@ -83,7 +73,6 @@ describe('publish pipeline', () => {
   })
 
   it('rejects eval() in source', async () => {
-    await setup()
     const a = await seedAuthor('dave')
     const buf = await buildPackage({
       id: 'demo',
@@ -100,7 +89,6 @@ describe('publish pipeline', () => {
   })
 
   it('rejects duplicate version', async () => {
-    await setup()
     const a = await seedAuthor('eve')
     const buf = await buildPackage({
       id: 'demo',
@@ -118,7 +106,6 @@ describe('publish pipeline', () => {
   })
 
   it('rejects publisher mismatch', async () => {
-    await setup()
     const a = await seedAuthor('frank')
     const b = await seedAuthor('mallory')
     const buf = await buildPackage({
@@ -135,7 +122,6 @@ describe('publish pipeline', () => {
 
 describe('extension search and download', () => {
   it('search returns published extensions', async () => {
-    await setup()
     const a = await seedAuthor('grace')
     const buf = await buildPackage({
       id: 'searchable',
@@ -153,7 +139,6 @@ describe('extension search and download', () => {
   })
 
   it('download endpoint returns json info and bumps counter', async () => {
-    await setup()
     const a = await seedAuthor('heidi')
     const buf = await buildPackage({
       id: 'dl',
@@ -178,7 +163,6 @@ describe('extension search and download', () => {
   })
 
   it('batch ?ids= returns multiple extensions', async () => {
-    await setup()
     const a = await seedAuthor('ivan')
     for (const id of ['one', 'two']) {
       const buf = await buildPackage({
@@ -199,7 +183,6 @@ describe('extension search and download', () => {
 
 describe('keys', () => {
   it('GET /v1/keys/:keyId returns pubkey', async () => {
-    await setup()
     const a = await seedAuthor('judy')
     const r = await SELF.fetch(`http://test.local/v1/keys/${a.keyId}`)
     expect(r.status).toBe(200)

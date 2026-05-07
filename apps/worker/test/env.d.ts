@@ -8,6 +8,7 @@ declare module 'cloudflare:test' {
     PUBLIC_R2_BASE: string
     SIGNED_URL_TTL_SEC: string
     JWT_SECRET?: string
+    TEST_MIGRATIONS: import('@cloudflare/vitest-pool-workers/config').D1Migration[]
   }
 }
 

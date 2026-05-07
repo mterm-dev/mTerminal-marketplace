@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ENDPOINT="${MTX_ENDPOINT:-http://localhost:8787}"
+ENDPOINT="${MTX_ENDPOINT:-http://127.0.0.1:8787}"
 TMP_HOME="$(mktemp -d -t mtx-smoke-XXXXXX)"
 TMP_PROJ="$(mktemp -d -t mtx-proj-XXXXXX)"
 trap 'rm -rf "$TMP_HOME" "$TMP_PROJ"' EXIT

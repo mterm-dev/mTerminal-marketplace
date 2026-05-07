@@ -1,9 +1,5 @@
-import { applySchema, clearDb } from './helpers'
-import { beforeAll, beforeEach } from 'vitest'
-
-beforeAll(async () => {
-  await applySchema()
-})
+import { beforeEach } from 'vitest'
+import { clearDb } from './helpers'
 
 beforeEach(async () => {
   await clearDb()

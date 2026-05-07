@@ -4,7 +4,7 @@ import { zipSync, strToU8 } from 'fflate'
 import { signEntries, type PackEntry } from './sign'
 import { validateManifest } from '@mterminal/manifest-validator'
 
-const INCLUDED_DIRS = ['dist']
+const INCLUDED_DIRS = ['dist', 'themes']
 const INCLUDED_FILES = ['package.json', 'README.md', 'readme.md', 'icon.png']
 
 async function walk(root: string, prefix = ''): Promise<PackEntry[]> {
