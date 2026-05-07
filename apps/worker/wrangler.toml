@@ -7,6 +7,12 @@ compatibility_flags = ["nodejs_compat"]
 GITHUB_CLIENT_ID = "replace-me"
 PUBLIC_R2_BASE = "http://localhost:8787/r2"
 SIGNED_URL_TTL_SEC = "300"
+ADMIN_LOGINS = "arthurr0"
+ADMIN_GITHUB_CLIENT_ID = "replace-me"
+ADMIN_DEV_LOGIN = "0"
+
+[triggers]
+crons = ["*/15 * * * *"]
 
 [[d1_databases]]
 binding = "DB"
@@ -21,3 +27,79 @@ bucket_name = "mterminal-packages"
 [[kv_namespaces]]
 binding = "SESSIONS"
 id = "00000000000000000000000000000000"
+
+[assets]
+directory = "../admin/dist"
+binding = "ASSETS"
+
+[env.staging]
+name = "mterminal-marketplace-staging"
+
+[env.staging.vars]
+GITHUB_CLIENT_ID = "REPLACE_WITH_STAGING_GITHUB_CLIENT_ID"
+ADMIN_GITHUB_CLIENT_ID = "REPLACE_WITH_STAGING_ADMIN_GITHUB_CLIENT_ID"
+ADMIN_LOGINS = "arthurr0"
+ADMIN_DEV_LOGIN = "0"
+PUBLIC_R2_BASE = "https://staging.marketplace.mterminal.app/r2"
+SIGNED_URL_TTL_SEC = "300"
+
+[[env.staging.routes]]
+pattern = "staging.marketplace.mterminal.app/*"
+zone_name = "mterminal.app"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "mterminal-staging"
+database_id = "REPLACE_WITH_STAGING_D1_DATABASE_ID"
+migrations_dir = "src/db/migrations"
+
+[[env.staging.r2_buckets]]
+binding = "PACKAGES"
+bucket_name = "mterminal-packages-staging"
+
+[[env.staging.kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_STAGING_SESSIONS_KV_ID"
+
+[env.staging.assets]
+directory = "../admin/dist"
+binding = "ASSETS"
+
+[env.staging.triggers]
+crons = ["*/15 * * * *"]
+
+[env.production]
+name = "mterminal-marketplace-prod"
+
+[env.production.vars]
+GITHUB_CLIENT_ID = "REPLACE_WITH_PROD_GITHUB_CLIENT_ID"
+ADMIN_GITHUB_CLIENT_ID = "REPLACE_WITH_PROD_ADMIN_GITHUB_CLIENT_ID"
+ADMIN_LOGINS = "arthurr0"
+ADMIN_DEV_LOGIN = "0"
+PUBLIC_R2_BASE = "https://marketplace.mterminal.app/r2"
+SIGNED_URL_TTL_SEC = "300"
+
+[[env.production.routes]]
+pattern = "marketplace.mterminal.app/*"
+zone_name = "mterminal.app"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "mterminal-prod"
+database_id = "REPLACE_WITH_PROD_D1_DATABASE_ID"
+migrations_dir = "src/db/migrations"
+
+[[env.production.r2_buckets]]
+binding = "PACKAGES"
+bucket_name = "mterminal-packages-prod"
+
+[[env.production.kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_PROD_SESSIONS_KV_ID"
+
+[env.production.assets]
+directory = "../admin/dist"
+binding = "ASSETS"
+
+[env.production.triggers]
+crons = ["*/15 * * * *"]
