@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import type { Env } from '../env'
 import { generateApiKey, hashApiKey } from '../lib/jwt'
 import { upsertAuthor } from '../db/queries'
+import { clientIp, rateLimit } from '../lib/ratelimit'
 import type {
   DeviceFlowPollResult,
   DeviceFlowStartResult,
@@ -29,7 +30,20 @@ function randomCode(len: number): string {
   return out
 }
 
+function rateLimited(c: { header: (k: string, v: string) => void }, resetAt: number) {
+  c.header(
+    'Retry-After',
+    String(Math.max(1, resetAt - Math.floor(Date.now() / 1000))),
+  )
+}
+
 authRoutes.post('/device/start', async (c) => {
+  const ip = clientIp(c.req.raw.headers)
+  const rl = await rateLimit(c.env, `device-start:${ip}`, 10, 3600)
+  if (!rl.ok) {
+    rateLimited(c, rl.resetAt)
+    return c.json({ error: 'rate limited' }, 429)
+  }
   const deviceCode = crypto.randomUUID()
   const userCode = `${randomCode(4)}-${randomCode(4)}`
   const ttlSec = 600
@@ -80,6 +94,11 @@ authRoutes.post('/device/start', async (c) => {
 authRoutes.post('/device/poll', async (c) => {
   const body = (await c.req.json().catch(() => null)) as { deviceCode?: string } | null
   if (!body?.deviceCode) return c.json({ error: 'deviceCode required' }, 400)
+  const rl = await rateLimit(c.env, `device-poll:${body.deviceCode}`, 60, 3600)
+  if (!rl.ok) {
+    rateLimited(c, rl.resetAt)
+    return c.json({ error: 'rate limited' }, 429)
+  }
   const raw = await c.env.SESSIONS.get(`device:${body.deviceCode}`)
   if (!raw) return c.json({ status: 'expired' } satisfies DeviceFlowPollResult)
   const state = JSON.parse(raw) as DeviceState
@@ -142,6 +161,12 @@ authRoutes.post('/device/poll', async (c) => {
 })
 
 authRoutes.post('/device/dev-authorize', async (c) => {
+  const ip = clientIp(c.req.raw.headers)
+  const rl = await rateLimit(c.env, `device-dev-authz:${ip}`, 30, 3600)
+  if (!rl.ok) {
+    rateLimited(c, rl.resetAt)
+    return c.json({ error: 'rate limited' }, 429)
+  }
   const body = (await c.req.json().catch(() => null)) as
     | { deviceCode?: string; githubLogin?: string }
     | null
