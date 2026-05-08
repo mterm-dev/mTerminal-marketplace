@@ -171,6 +171,77 @@ describe('staticScan', () => {
     ])
     expect(result.ok).toBe(true)
   })
+
+  it('flags bare module specifier in dist/*.mjs', () => {
+    const code = 'const a = 1\nimport hljs from "highlight.js/lib/common";'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error.code).toBe('static-scan')
+      const issue = result.error.issues.find((i) => i.message.includes('bare module specifier'))
+      expect(issue).toBeDefined()
+      expect(issue?.message).toContain('"highlight.js/lib/common"')
+      expect(issue?.path).toBe('dist/renderer.mjs')
+      expect(issue?.line).toBe(2)
+      expect(issue?.col).toBeGreaterThan(0)
+    }
+  })
+
+  it('accepts relative imports in dist/*.mjs', () => {
+    const code = 'import x from "./foo.js"\nimport y from "../bar.mjs"\nexport { z } from "./z.js"'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
+
+  it('accepts @mterminal/extension-api in dist/*.mjs', () => {
+    const code = 'import { x } from "@mterminal/extension-api"'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
+
+  it('ignores bare imports in dist/*.cjs', () => {
+    const code = 'const x = require("highlight.js/lib/common")'
+    const result = staticScan([{ path: 'dist/main.cjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
+
+  it('flags bare side-effect import in dist/*.mjs', () => {
+    const code = 'import "side-effect-pkg"'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      const issue = result.error.issues.find((i) => i.message.includes('bare module specifier'))
+      expect(issue?.message).toContain('"side-effect-pkg"')
+    }
+  })
+
+  it('flags bare dynamic import in dist/*.mjs', () => {
+    const code = 'const m = await import("some-pkg")'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      const issue = result.error.issues.find((i) => i.message.includes('bare module specifier'))
+      expect(issue?.message).toContain('"some-pkg"')
+    }
+  })
+
+  it('does not flag import-like strings in code', () => {
+    const code = 'const x = "import \'foo\'"\nconst y = `import "bar"`\nconst z = "import(\\"baz\\")"'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
+
+  it('accepts mt-ext:// and data: specifiers', () => {
+    const code = 'import a from "mt-ext://host/foo.mjs"\nconst b = await import("data:text/javascript,export default 1")'
+    const result = staticScan([{ path: 'dist/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
+
+  it('only scans dist/*.mjs for bare imports (skips src/)', () => {
+    const code = 'import hljs from "highlight.js/lib/common"'
+    const result = staticScan([{ path: 'src/renderer.mjs', content: strToU8(code) }])
+    expect(result.ok).toBe(true)
+  })
 })
 
 describe('checkCapabilities', () => {

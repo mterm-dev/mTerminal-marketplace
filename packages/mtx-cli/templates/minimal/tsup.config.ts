@@ -15,5 +15,7 @@ export default defineConfig([
     outDir: 'dist',
     outExtension: () => ({ js: '.mjs' }),
     target: 'es2022',
+    external: ['@mterminal/extension-api'],
+    noExternal: [/.*/],
   },
 ])
