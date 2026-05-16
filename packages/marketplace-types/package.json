@@ -1,6 +1,6 @@
 {
   "name": "@mterminal/marketplace-types",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "shared dto types for the mterminal marketplace",
   "license": "MIT",
   "type": "module",

@@ -95,6 +95,50 @@ describe('validateManifest', () => {
     expect(result.ok).toBe(false)
   })
 
+  it('accepts panels with built-in location slots', () => {
+    const m: any = baseManifest()
+    m.mterminal.contributes = {
+      panels: [
+        { id: 'p1', title: 'one', location: 'sidebar' },
+        { id: 'p2', title: 'two', location: 'sidebar.bottom' },
+        { id: 'p3', title: 'three', location: 'bottombar' },
+      ],
+    }
+    const result = validateManifest(m)
+    expect(result.ok).toBe(true)
+  })
+
+  it('accepts panels mounted in a workspace-section.<id> slot', () => {
+    const m: any = baseManifest()
+    m.mterminal.contributes = {
+      panels: [
+        { id: 'p', title: 'remote', location: 'workspace-section.remote-ssh' },
+      ],
+    }
+    const result = validateManifest(m)
+    expect(result.ok).toBe(true)
+  })
+
+  it('rejects panel with unknown location', () => {
+    const m: any = baseManifest()
+    m.mterminal.contributes = {
+      panels: [{ id: 'p', title: 't', location: 'nowhere' }],
+    }
+    const result = validateManifest(m)
+    expect(result.ok).toBe(false)
+    if (!result.ok)
+      expect(result.errors.join('\n')).toMatch(/invalid location "nowhere"/)
+  })
+
+  it('rejects panel with empty workspace-section suffix', () => {
+    const m: any = baseManifest()
+    m.mterminal.contributes = {
+      panels: [{ id: 'p', title: 't', location: 'workspace-section.' }],
+    }
+    const result = validateManifest(m)
+    expect(result.ok).toBe(false)
+  })
+
   it('accepts theme-only declarative manifest', () => {
     const m: any = baseManifest()
     delete m.main
